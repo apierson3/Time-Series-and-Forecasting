@@ -1,0 +1,170 @@
+---
+title: "Assignment 4"
+author: "Andrew Pierson"
+date: "December 9, 2018"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE, tidy = TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(fpp2)
+library(ggplot2)
+#library(tidyverse)
+library(forecast)
+library(openxlsx)
+library(readxl)
+```
+
+## Problem 5: 
+
+### Part A: What sort of ARIMA model is identified for n_t?
+
+An ARIMA(1,0,2) was identified as the optimal model using the auto.arima function where the fitted model n_t = (0.692n_t-1 + e_t - 0.576e_t-1 + 0.198e_t-2) minimises the sum of squared error values. The initial plot of the percentage difference in quartely personal consumption expenditure and personal disposable income indicates that the data are stationary, therefore there is no need for differencing.  From the residuals plot we can tell that the are not much different from white noise and can most likely be considered as such. 
+
+```{r Problem 5 Part A, warning = FALSE, message = FALSE, tidy = TRUE}
+#Plot the initial time series
+autoplot(uschange[,1:2], facets = TRUE) + xlab("Year") + ylab("Percentage Change") + ggtitle("Quarterly changes in US Consumption and Personal Income")
+
+#Fit the time series using auto ARIMA function
+fit <- auto.arima(uschange[,"Consumption"], xreg = uschange[, "Income"])
+fit
+
+#Check the residuals of the ARIMA model
+checkresiduals(fit)
+```
+
+### Part B: Explain what the estimates of B_1 and B_2 tell us about electricity consumption.
+B_1 and B_2 are both positive beta parameters and therefore tell us they are positively correlated to the predicted variable. The estimates of B_1 and B_2 are 0.0077, and 0.0208 respectively and both have P-values of 0.000. Their P-values do not indicate a significant effect, therefore they are both weighted lightly and the white noise error is what makes up the majority of the electricity consumption. 
+
+```{r Problem 5 Part B, warning = FALSE, message = FALSE, tidy = TRUE}
+```
+
+### Part C: Write the equation in a form more suitable for forecasting.
+
+```{r Problem 5 Part C, warning = FALSE, message = FALSE, tidy = TRUE}
+print("(y*_t - y*_t-1 - y*_t-13) = B_1(x*_1,t - x*_1,t-1 - x*_1,t-12 + x*_1,t-13) + B_2(x*_2,t - x*_2,t-1 - x*_2,t-12 + x*_2,t-13) + e_t(1-@_1*B)/(1-@_12*B^12 - @_24*B^24)")
+```
+
+### Part D: Describe how this model could be used to forecast electricity demand for the next 12 months.
+
+This model could be used to forecast electricity demand for the next twelve months by using an ARIMA model and looking at the mean forecast similar to the one below.
+
+```{r Problem 5 Part D, warning = FALSE, message = FALSE, tidy = TRUE}
+#Produce a forecast of the fitted model
+fcast <- forecast(fit, xreg=rep(mean(uschange[,2]),8))
+
+#Plot the forecast of the model to display
+autoplot(fcast) + xlab("Year") +ylab("Percentage change")
+```
+
+### Part E: Explain why the n_t term should be modelled with an ARIMA model rather than modelling the data using a standard regression package. In your discussion, comment on the properties of the estimates, the validity of the standard regression results, and the importance of the n_t model in producing forecasts.
+
+The n_t term should be modelled with an ARIMA model rather than with a standard regression model because the ARIMA model minimizes the error estimate in the model. The n_t model is important in producing forecasts because it is a key to the system of equations that predicts the percentage change. 
+
+```{r Problem 5 Part E, warning = FALSE, message = FALSE, tidy = TRUE}
+```
+
+## Problem 6: For the retail time series considered in earlier chapters:
+
+### Part A: Develop an appropriate dynamic regression model with Fourier terms for the seasonality. Use the AIC to select the number of Fourier terms to include in the model. (You will need to use the same Box-Cox transformation you identified previously).
+
+```{r Problem 6 Part A, warning = FALSE, message = FALSE, tidy = TRUE}
+#Change the working directory to the location of the dataset
+setwd('E:/Rockhurst University/FS18/B Term/BIA 6315 Time Series and Forecasting/Assignment 4')
+getwd()
+
+#Load in the dataset 
+retail <- read_excel("retail.xlsx", sheet = 1, skip = 1)
+#Define the time series data and format periods
+retail.ts <- ts(retail[,"A3349873A"], frequency=12, start=c(1982,4))
+#Plot the time series with appropriate axis and title labels
+autoplot(retail.ts) + xlab('Year') + ylab('Turnover') + ggtitle('Retail Turnover in New South Wales')
+
+#Define the lambda value from the Box-Cox transformation
+lambda_retail <- BoxCox.lambda(retail.ts)
+
+#Select the number of Fouriers
+min.AIC <- Inf
+K_min.AIC <- 0
+
+for(num in c(1:6)){
+  retail.ts_tslm <- tslm(
+    retail.ts ~ trend + fourier(retail.ts, K = num),
+    lambda = lambda_retail
+    )
+  
+  AIC <- CV(retail.ts_tslm)["AIC"]
+  
+  if(AIC < min.AIC){
+    min.AIC <- AIC
+    K_min.Aic <- num
+  }
+}
+
+#Harmonic regression model 
+retail.ts_tslm <- tslm(
+  retail.ts ~ trend + fourier(retail.ts, K = K_min.Aic),
+  lambda = lambda_retail
+  )
+autoplot(retail.ts) +
+  autolayer(retail.ts_tslm$fitted.values) + xlab("Year") + ylab("Turnover") + ggtitle("Harmonic Regression Model of Retail Turnover in New South Wales")
+
+#Dynamic regression model
+retail.ts_autoarima <- auto.arima(
+  retail.ts,
+  lambda = lambda_retail,
+  xreg = cbind(
+    Fourier = fourier(retail.ts, K = K_min.Aic),
+    time = time(retail.ts)
+    )
+)
+retail.ts_autoarima
+autoplot(retail.ts) +
+  autolayer(retail.ts_autoarima$fitted) + xlab("Year") + ylab("Turnover") + ggtitle("Dynamic Regression Model of Retail Turnover in New South Wales")
+```
+
+### Part B: Check the residuals of the fitted model. Does the residual series look like white noise?
+
+After checking the residuals from both the harmonic regression model and the ARIMA model, the ARIMA model appears to look more similar to white noise. I would recommend using the ARIMA model to forecast. 
+
+```{r Problem 6 Part B, warning = FALSE, message = FALSE, tidy = TRUE}
+#Auto ARIMA model residuals
+checkresiduals(retail.ts_autoarima)
+
+#Harmonic regression model residuals
+checkresiduals(retail.ts_tslm)
+```
+
+### Part C: Compare the forecasts with those you obtained earlier using alternative models.
+
+The resulting model appears to indicate that the ARIMA model is optimal. Based on this, I would suggest using the ARIMA(1,0,3)(1,0,1)[12] model to forecast.
+
+```{r Problem 6 Part C, warning = FALSE, message = FALSE, tidy = TRUE}
+#Change the working directory to the location of the dataset
+setwd('E:/Rockhurst University/FS18/B Term/BIA 6315 Time Series and Forecasting/Assignment 4')
+getwd()
+
+#Load in the comparing dataset 
+retail.new <- read_excel("8501011.xlsx", sheet = "Data1", skip = 9)
+retail.new.ts <- ts(retail.new[, "A3349873A"], start = c(1982, 4), frequency = 12)
+retail.new.test <- subset(
+  retail.new.ts,
+  start = length(retail.ts) + 1
+  )
+
+#Make a variable which takes future values
+t <- time(retail.ts)
+xreg.new = cbind(
+  Fourier = fourier(retail.ts, K = K_min.Aic, h = 36),
+  time = t[length(t)] + seq(36)/12
+  )
+
+#Forecast 36 periods
+fc_retail.ts_autoarima <- forecast(
+  retail.ts_autoarima,
+  h = 36,
+  xreg = xreg.new
+)
+autoplot(fc_retail.ts_autoarima)
+accuracy(fc_retail.ts_autoarima, retail.new.test)
+```

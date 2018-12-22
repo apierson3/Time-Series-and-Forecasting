@@ -1,0 +1,211 @@
+---
+title: "Assignment 3"
+author: "Andrew Pierson"
+date: "November 26, 2018"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+library(fpp2)
+library(ggplot2)
+#library(tidyverse)
+library(forecast)
+#library(ets)
+```
+
+## Problem 7: Consider wmurders, the number of women murdered each year (per 100,000 standard population) in the United States.
+
+### Part A: By studying appropriate graphs of the series in R, find an appropriate ARIMA(p,d,q) model for these data. 
+Upon initial inspection of the dataset, the time series appears to have no trend or seasonality but does have a cyclic behavior with large atypical variance. There is also no discernable trend in the data.  From this I would expect this series to be a non-stationary time series. Further analysis of the autocorrelation plot indicates a quick drop to zero, which is a clear indication of a non-stationary series. The auto.arima function selected an ARIMA(1,2,1) as the optimal model.
+Investigating the differenced data using the Ljung-Box test revealed a high p-value of 0.5176, suggesting that yearly change in the murders of women is random and uncorrelated with previous years. Differencing appears to make the trend horizonatal with random variation, an indicator of stationary data. The next step to determine if the difference of the data yearly is stationary is to create an ACF plot. After printing this graph there appears to be a significant autocorrelation spike at lag 2. From this I would suggest an AR(2) or MA(2) model with a difference of 1, hence an ARIMA(0,1,2).
+
+```{r Problem 7 Part A}
+#Print the top 5 observations in the time series data
+head(wmurders)
+#Summary statistics of the dataset
+summary(wmurders)
+#Plot the time series
+autoplot(wmurders) + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') + ggtitle('Number of Women Murdered Each Year')
+#Plot the ACF of the series
+ggAcf(wmurders) + ggtitle('Autocorrelation Function Plot of the Number of Women Murdered Each Year')
+#Plot the differenced data
+autoplot(diff(wmurders, lag = 1)) + xlab('Year') + ggtitle('Difference of Number of Women Murdered Each Year')
+#Look at the autocorrelation function (ACF) of the differenced data
+Box.test(diff(wmurders), lag = 1, type = "Ljung-Box")
+#Plot the ACF of the differenced series
+ggAcf(diff(wmurders, lag = 1)) + ggtitle('Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
+#Plot the PACF of the differenced series to get the value of p for an AR model
+ggPacf(diff(wmurders)) + ggtitle('Partial Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
+#
+```
+
+### Part B: Should you include a constant in the model? Explain.
+I do not believe that this model will require a constant.
+
+### Part C: Write this model in terms of the backshift operator.
+(1-B)*y_t
+
+### Part D: Fit the model using R and examine the residuals. Is the model satisfactory?
+Neither ARIMA(0,1,2) nor ARIMA(2,1,0) models have an AIC value closer to zero than the ARIMA(1,2,1) model. I would recommend using the ARIMA(0,1,2) model.
+
+```{r Problem 7 Part D}
+#Custom select variables for an ARIMA model
+fit_MA2 <- Arima(wmurders, order = c(0, 1, 2))
+fit_MA2
+#Calculate summary of the model
+summary(fit_MA2)
+#Check the residual error of the model
+checkresiduals(fit_MA2)
+#Custom select variables for an ARIMA model
+fit_RA2 <- Arima(wmurders, order = c(2, 1, 0))
+fit_RA2
+#Calculate summary of the model
+summary(fit_RA2)
+#Check the residual error of the model
+checkresiduals(fit_RA2)
+```
+
+### Part E: Forecast three times ahead.
+
+```{r Problem 7 Part E}
+#Use the forecast function and autoplot to create a plot
+fit_MA2 %>% forecast(h = 3)
+#Use the forecast function and autoplot to create a plot
+fit_RA2 %>% forecast(h = 3)
+```
+
+### Part F: Create a plot of the series with forecasts and prediction intervals for the next three periods shown.
+
+```{r Problem 7 Part F}
+#Use the forecast function and autoplot to create a plot
+fit_MA2 %>% forecast(h = 3) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
+#Use the forecast function and autoplot to create a plot
+fit_RA2 %>% forecast(h = 3) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
+```
+
+### Part G: 
+
+```{r Problem 7 Part G}
+#Automatically select an ARIMA model
+fit_auto <- auto.arima(wmurders, seasonal = FALSE)
+fit_auto
+#Calculate the summary of the model
+summary(fit_auto)
+#Check the residual error of the model
+checkresiduals(fit_auto)
+#Use the forecast function and autoplot to create a plot
+fit_auto %>% forecast(h = 3) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
+```
+
+## Problem 9: For the usgdp series 
+
+### Part A: If necessary, find a suitable Box-Cox transformation for the data.
+
+```{r Problem 9 Part A}
+#Print the top 5 observations in the time series data
+head(usgdp)
+#Summary statistics of the dataset
+summary(usgdp)
+#Plot the time series
+autoplot(usgdp) + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') + ggtitle('Number of Women Murdered Each Year')
+#Plot the ACF of the series
+ggAcf(usgdp) + ggtitle('Autocorrelation Function Plot of the Number of Women Murdered Each Year')
+#Plot the differenced data
+autoplot(diff(usgdp, lag = 1)) + xlab('Year') + ggtitle('Difference of Number of Women Murdered Each Year')
+#Look at the autocorrelation function (ACF) of the differenced data
+Box.test(diff(usgdp), lag = 1, type = "Ljung-Box")
+#Plot the ACF of the differenced series
+ggAcf(diff(usgdp, lag = 1)) + ggtitle('Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
+#Plot the PACF of the differenced series to get the value of p for an AR model
+ggPacf(diff(usgdp)) + ggtitle('Partial Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
+#
+```
+
+### Part B: Fit a suitable ARIMA model to the transformed data using auto arima.
+
+```{r Problem 9 Part B}
+#Automatically select an ARIMA model
+fit_auto <- auto.arima(usgdp, seasonal = FALSE)
+fit_auto
+#Calculate the summary of the model
+summary(fit_auto)
+#Check the residual error of the model
+checkresiduals(fit_auto)
+#Use the forecast function and autoplot to create a plot
+fit_auto %>% forecast(h = 20) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
+```
+
+### Part C: Try some other plausible models by experimenting with the orders chosen
+
+```{r Problem 9 Part C}
+#Custom select variables for an ARIMA model
+fit1 <- Arima(usgdp, order = c(0, 1, 2))
+fit1
+#Calculate summary of the model
+summary(fit1)
+#Check the residual error of the model
+checkresiduals(fit1)
+#Custom select variables for an ARIMA model
+fit2 <- Arima(usgdp, order = c(2, 2, 1))
+fit2
+#Calculate summary of the model
+summary(fit2)
+#Check the residual error of the model
+checkresiduals(fit2)
+#Custom select variables for an ARIMA model
+fit3 <- Arima(usgdp, order = c(1, 2, 2))
+fit3
+#Calculate summary of the model
+summary(fit3)
+#Check the residual error of the model
+checkresiduals(fit3)
+```
+
+### Part F: Compare the results with what you would obtain using ets with no transformation. 
+
+```{r Problem 9 Part G}
+#Find the variables of the ets automatically chosen model
+ets(usgdp)
+```
+
+## Problem 10: Consider austourists, the quarterly number of international tourists to Australia for the period 1999 - 2010.
+
+### Part A: Describe the time series. 
+This time series has a clear positive trend from beginning to end. In addition, the time series plot also appears to have clear seasonality throughout.
+```{r Problem 10 Part A}
+#Create a time series plot of the data
+autoplot(austourists) + xlab("Year") + ylab("Number of International Tourists") + ggtitle("Quarterly Number of International Tourists to Australia From 1999 to 2010")
+```
+
+### Part B: What can you learn from the ACF graph? 
+
+```{r Problem 10 Part B}
+#Plot the autocorrelation function of the austourists data
+ggAcf(austourists) + ggtitle("ACF Plot of Quarterly Number of International Tourists to Australia From 1999 to 2010")
+```
+
+### Part C: What can you learn from the PACF graph? 
+
+```{r Problem 10 Part C}
+#Plot the PACF model of the time series data
+ggPacf(austourists) + ggtitle("PACF Plot of Quarterly Number of International Tourists to Australia From 1999 to 2010")
+```
+
+### Part D: Produce plots of the seasonally differenced data (1-B^4)y_t. What model do these graphs suggest?
+
+```{r Problem 10 Part D}
+#Difference the data in order to reduce trend
+austouristsdiff <- austourists %>% diff() %>% diff() %>% diff() %>% diff()
+#Plot the fourth order differenced data
+autoplot(austouristsdiff) + ggtitle("Fourth-Order Difference of Quarterly Number of International Tourists to Australia From 1999 to 2010 ")
+```
+
+### Part E: Did auto arima give the same model that you chose? If not, which model do you think is better?
+
+```{r Problem 10 Part E}
+#Plot the fourth order differenced data
+auto.arima(austouristsdiff)
+```
+
+### Part F: Write the model in terms of the backshift operator, then without using the backshift operator.
