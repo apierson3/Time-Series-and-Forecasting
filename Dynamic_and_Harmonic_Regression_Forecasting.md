@@ -1,11 +1,6 @@
----
-title: "Dynamic and Harmonic Regression Forecasting"
-author: "Andrew Pierson"
-date: "December 9, 2018"
-output: 
-  html_document:
-    keep_md: true
----
+### Dynamic and Harmonic Regression Forecasting
+### Author: Andrew Pierson
+### Date: December 9, 2018
 
 
 ```r
@@ -30,7 +25,7 @@ autoplot(uschange[, 1:2], facets = TRUE) + xlab("Year") + ylab("Percentage Chang
     ggtitle("Quarterly changes in US Consumption and Personal Income")
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 5 Part A-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%205%20Part%20A-1.png)<!-- -->
 
 ```r
 # Fit the time series using auto ARIMA function
@@ -56,7 +51,7 @@ fit
 checkresiduals(fit)
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 5 Part A-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%205%20Part%20A-2.png)<!-- -->
 
 ```
 ## 
@@ -82,7 +77,7 @@ fcast <- forecast(fit, xreg = rep(mean(uschange[, 2]), 8))
 autoplot(fcast) + xlab("Year") + ylab("Percentage change")
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 5 Part D-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%205%20Part%20D-1.png)<!-- -->
 
 
 
@@ -109,7 +104,7 @@ retail.ts <- ts(retail[, "A3349873A"], frequency = 12, start = c(1982, 4))
 autoplot(retail.ts) + xlab("Year") + ylab("Turnover") + ggtitle("Retail Turnover in New South Wales")
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 6 Part A-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%206%20Part%20A-1.png)<!-- -->
 
 ```r
 # Define the lambda value from the Box-Cox transformation
@@ -138,7 +133,7 @@ autoplot(retail.ts) + autolayer(retail.ts_tslm$fitted.values) + xlab("Year") +
     ylab("Turnover") + ggtitle("Harmonic Regression Model of Retail Turnover in New South Wales")
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 6 Part A-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%206%20Part%20A-2.png)<!-- -->
 
 ```r
 # Dynamic regression model
@@ -175,7 +170,7 @@ autoplot(retail.ts) + autolayer(retail.ts_autoarima$fitted) + xlab("Year") +
     ylab("Turnover") + ggtitle("Dynamic Regression Model of Retail Turnover in New South Wales")
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 6 Part A-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%206%20Part%20A-3.png)<!-- -->
 
 
 After checking the residuals from both the harmonic regression model and the ARIMA model, the ARIMA model appears to look more similar to white noise. I would recommend using the ARIMA model to forecast. 
@@ -186,7 +181,7 @@ After checking the residuals from both the harmonic regression model and the ARI
 checkresiduals(retail.ts_autoarima)
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 6 Part B-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%206%20Part%20B-1.png)<!-- -->
 
 ```
 ## 
@@ -203,7 +198,7 @@ checkresiduals(retail.ts_autoarima)
 checkresiduals(retail.ts_tslm)
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 6 Part B-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%206%20Part%20B-2.png)<!-- -->
 
 ```
 ## 
@@ -243,7 +238,7 @@ fc_retail.ts_autoarima <- forecast(retail.ts_autoarima, h = 36, xreg = xreg.new)
 autoplot(fc_retail.ts_autoarima)
 ```
 
-![](Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem 6 Part C-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Dynamic_and_Harmonic_Regression_Forecasting_files/figure-html/Problem%206%20Part%20C-1.png)<!-- -->
 
 ```r
 accuracy(fc_retail.ts_autoarima, retail.new.test)
