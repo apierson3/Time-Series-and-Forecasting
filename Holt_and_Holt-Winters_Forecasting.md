@@ -1,12 +1,6 @@
----
-title: "Holt and Holt-Winters Forecasting"
-author: "Andrew Pierson"
-date: "11/12/2018"
-output: 
-  html_document:
-    keep_md: true
----
-
+### Holt and Holt-Winters Forecasting
+#### Author: Andrew Pierson
+#### Date: 11/12/2018
 
 
 ```r
@@ -35,7 +29,6 @@ library(ggplot2)
 
 Here I changed the forecast parameters to use the default settings and also have varying alpha and beta parameter settings. The second and third fits both have the same alpha value, this is to give us an indication to how our beta parameter is affecting the forecast. The third and fourth fits have a constant beta value to give a better understanding of how the alpha parameter changes the forecast.
 
-
 ```r
 #Forecast the specified window of data
 fc1 <- holt(eggs, h=15)
@@ -55,11 +48,10 @@ autoplot(eggs) +
   guides(color = guide_legend(title = "Forecast"))
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/1-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/1-1.png)<!-- -->
 
 
 The intuition that I would explain when changing the parameters for alpha and beta would be different. While changing the parameter of alpha, I would describe an increase in the parameter value as having an effect where the forecasted series' level is increasing. For the beta parameter, I would describe changes to this parameter as having an effect on the trend of the forecast. 
-
 
 ```r
 #Forecast the specified window of data
@@ -80,11 +72,10 @@ autoplot(eggs) +
   guides(color = guide_legend(title = "Forecast"))
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/2-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/2-1.png)<!-- -->
 
 
 The model with the lowest RMSE is the first model, using the automatically adjusted alpha and beta parameters. Respectively they are 0.8124 and 1e-04.
-
 
 ```r
 #RMSE of the 5 different holt models
@@ -345,18 +336,16 @@ library(fpp2)
 
 The ukcars dataset ranges from 1977 to 2005 and contains observations of the number of cars in thousands. The plot of data spans 112 periods, each lasting a quarter of a year. This plot appears to be seasonal and trending throughout certain ranges of years. One example of a trend from this dataset is the positive trend from around 1985 to 2000, which has quarterly seasonality.
 
-
 ```r
 #Plot the ukcars dataset
 autoplot(ukcars) + 
   ggtitle("UK Cars") + xlab("Year") + ylab("Thousands of cars")
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/5-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/5-1.png)<!-- -->
 
 
 The first chart below is the ukcars dataset decomposed to compare the data to its seasonality, trend, and autocorrelation plots. This allows us to see the trend, which seems to start out decreasing and increase for about 20 years before seeing a sharp decrease. The seasonality also appears to be constant. The seasonally adjusted data seems to remove the constant seasonality from most of the data.
-
 
 ```r
 library(zoo)
@@ -381,8 +370,8 @@ ukcarsdata <- as.zoo(ukcars)
 stl <- stl(ukcarsdata, s.window="periodic")
 plot(stl)
 ```
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/6-1.png)<!-- -->
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/6-1.png)<!-- -->
 
 ```r
 #Obtain seasonally adjusted data using x11
@@ -390,7 +379,8 @@ sad <- seasadj(stl)
 plot(sad)
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/6-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/6-2.png)<!-- -->
+
 
 ```r
 #seasonal::series(sad, "forecast.forecasts")
@@ -400,7 +390,6 @@ plot(sad)
 In this part I printed a summary of the fit that I was using and the forecasted data over 2 years which equated to eight periods in the holt forecasting function. The forecasted data indicates a trend that is increasing linearly over the next 2 years. 
 
 The parameters of the holt's method function that I used were sad and h = 8. These parameters indicate that the data I am using has been seasonally adjusted and that I am forecasting eight periods. The damped parameter has been automatically set to false and the initial set to simple. It has also indicated that it is not using an exponential trend.
-
 
 ```r
 #Use Holt's method to create a forecast
@@ -459,11 +448,10 @@ autoplot(sad) +
   guides(color = guide_legend(title = "Forecast"))
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/7-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/7-1.png)<!-- -->
 
 
 The re-seasonalized forecasts look reasonable from a standpoint of having a similar variation across periods. However, there does not appear to be any trend to the forecasted seasonality.
-
 
 ```r
 #Decompose the data using the stl() function
@@ -487,11 +475,10 @@ autoplot(ukcars) +
 ## Warning: Ignoring unknown parameters: PI
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/8-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/8-1.png)<!-- -->
 
 
 After applying the ets function to the ukcars data I would recommend using a ETS(A, N, A) model. This result comes from the ets parameter model = "ZZZ" which allows the model to choose the framework of Hyndman where A denotes additive, M denotes multiplicative, and N denotes none. Additionally, the place of the framework identifies (error type, trend type, season type). 
-
 
 ```r
 #Use ets() function to choose a seasonal model
@@ -520,7 +507,6 @@ ets(ukcars, model = "ZZZ")
 
 
 Apply both an X11 and a SEATS model using a two year horizon. 
-
 
 ```r
 #Load seasonal package from library
@@ -619,7 +605,6 @@ print(b)
 
 The RMSE of the fitted model, which is the holt linear trend method applied to seasonally adjusted data and forecasted over an eight period horizon gives the optimal value. The X11 model and SEATS model both give an output of 26.52 for their RMSE values. I would explain this by saying that there wasn't any variation between methods.
 
-
 ```r
 #RMSE of the X11 series model
 print("X11 RMSE:")
@@ -711,7 +696,6 @@ summary(fit)
 
 The forecast from the x11 approach seems the most reasonable because it appears to have a consistent seasonality.
 
-
 ```r
 #Plot the data
 autoplot(ukcars) + 
@@ -732,7 +716,8 @@ autoplot(ukcars) +
 ## Warning: Ignoring unknown parameters: PI
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/12-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/12-1.png)<!-- -->
+
 
 ```r
 #Plot the data
@@ -754,7 +739,8 @@ autoplot(ukcars) +
 ## Warning: Ignoring unknown parameters: PI
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/12-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/12-2.png)<!-- -->
+
 
 ```r
 #Plot the data
@@ -764,8 +750,7 @@ autoplot(ukcars) +
   guides(color = guide_legend(title = "Forecast"))
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/12-3.png)<!-- -->
-
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/12-3.png)<!-- -->
 
 
 ```r
@@ -778,7 +763,6 @@ library(fpp2)
 
 This data is a time series from 1985 to 2005 which seems to have an increasing seasonality over periods and an increasing trend. There also appears to be an outlier that creates a large decrease in the time series around 1989 and 2003.
 
-
 ```r
 #Plot the data
 autoplot(visitors) + 
@@ -786,11 +770,10 @@ autoplot(visitors) +
   ggtitle("International visitors nights in Australia")
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/14-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/14-1.png)<!-- -->
 
 
 The multiplicative seasonality is necessary when forecasting using the Holt-Winters' method to ensure that the seasonality is increasing. 
-
 
 ```r
 #Fit the forecast using Holt-Winters' multiplicative method
@@ -802,11 +785,10 @@ autoplot(visitors) +
   ggtitle("International visitors nights in Australia")
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/15-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/15-1.png)<!-- -->
 
 
 I chose the multiplicative seasonal parameter and damped parameter set to true to see if the dampening effect was similar to the trend of the original time series. The other trenf that I chose was to see a Holt-Winters' model with an additive parameter. I was interested to see what would happen if the seasonality did not keep increasing as it had in the original time series.
-
 
 ```r
 #Holt-Winters multiplicative method with damped trend
@@ -822,7 +804,8 @@ autoplot(visitors) +
   ggtitle("International visitors nights in Australia")
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/16-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/16-1.png)<!-- -->
+
 
 ```r
 #Plot the Additive Holt-Winters' forecast
@@ -832,11 +815,10 @@ autoplot(visitors) +
   ggtitle("International visitors nights in Australia")
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/16-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/16-2.png)<!-- -->
 
 
 The Holt-Winters' default method, Holt-Winters' Damped Multiplicative Method, and Holt-Winters' Additive method returned respective RMSE values of 14.66, 14.41, and 18.02. Multiplicative Damped Holt-Winters' Method returns the smallest RMSE value, therefore I would choose this method. 
-
 
 ```r
 #RMSE of Holt-Winters' Method
@@ -1071,15 +1053,15 @@ print(visitors_ets)
 plot(visitors_ets)
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/18-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/18-1.png)<!-- -->
+
 
 ```r
 #Plot forecast of model
 autoplot(forecast(visitors_ets, h = 24), ylab = "Visitor nights (in millions)")
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/18-2.png)<!-- -->
-
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/18-2.png)<!-- -->
 
 
 ```r
@@ -1108,7 +1090,6 @@ library(ggplot2)
 
 
 This time serious plot of the log of alcohol demand over time ranges from April 1870 to December 1938. The time series data appears to be stochastic, it does not have a strong trend and the patterns in a periodical view do not have any pattern that I would describe as seasonal. 
-
 
 ```r
 #Import the data csv. stringsasFactors ensures the numeric values can be treated as decimals later
@@ -1192,7 +1173,7 @@ autoplot.zoo(alc, main = "Log Alcohol Consumption per Head UK 1870-1938") + xlab
 ## Don't know how to automatically pick scale for object of type yearmon. Defaulting to continuous.
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/20-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/20-1.png)<!-- -->
 
 
 From the decomposed time series object there appears to be a weak positive trend. I still do not see any evidence of seasonality.
@@ -1206,11 +1187,10 @@ alc_decomp <- stl(alc, s.window = 3)
 autoplot(alc_decomp)
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/21-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/21-1.png)<!-- -->
 
 
 Test for normality using the Jaques-Berra test as well as a qqlot.  
-
 
 ```r
 #Read in packages that have already been installed
@@ -1268,7 +1248,7 @@ qqnorm(alc)
 qqline(alc, col = 2)
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/22-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/22-1.png)<!-- -->
 
 
 Transformation parameter increased showed better results, more points appear to have a closer fit to the mean normal distribution regression line.
@@ -1280,7 +1260,7 @@ qqnorm(BoxCox(alc, 4))
 qqline(BoxCox(alc, 4), col = 2)
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/23-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/23-1.png)<!-- -->
 
 
 This suggests that the lag is decreasing linearly as the lag number increases. The more periods out that are used to train the forecast, the less of an effect the data points will have in the data produced from the forecast.
@@ -1291,7 +1271,7 @@ This suggests that the lag is decreasing linearly as the lag number increases. T
 acf(alc)
 ```
 
-![](Holt_and_Holt-Winters_Forecasting_files/figure-html/24-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Holt_and_Holt-Winters_Forecasting_files/figure-html/24-1.png)<!-- -->
 
 
 Test to determine if the autocorrelation shows significant relationships between observations. The X-squared value is twice as large when the lag is doubled. The degrees of freedom is the same number as the number of lags indicated by the function.
