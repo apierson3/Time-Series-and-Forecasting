@@ -1,11 +1,6 @@
----
-title: "Hierarchical, Optimally Reconciled, TBATS and Neural Net Forecasting"
-author: "Andrew Pierson"
-date: "December 10, 2018"
-output: 
-  html_document:
-    keep_md: true
----
+### Hierarchical, Optimally Reconciled, TBATS and Neural Net Forecasting
+#### Author: Andrew Pierson
+#### Date: December 10, 2018
 
 
 ```r
@@ -22,7 +17,6 @@ library(hts)
 
 The initial plot of the aggregate-level view of the hierarchical time series appears to be very seasonal. Upon inspection of level 1 of the hirachical time series, the total number of nights stayed in Australia by tourists grouped by state, we notice that the NSW region is has the largest amount of visitors. The data at level one also appears to follow a similar trend as the aggregate-level view of the total nights stayed in Australia. I am satisfied with these forecasts, they appear to follow a striking similarity to the seasonal patterns observed in the hierarchy.
 
-
 ```r
 # Define the hierarchical time series
 tourism.hts <- hts(visnights, characters = c(3, 5))
@@ -32,7 +26,8 @@ tourism.hts %>% aggts(levels = 0:1) %>% autoplot(facet = TRUE) + xlab("Year") +
     ylab("Millions") + ggtitle("Visitor Nights")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/1-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/1-1.png)<!-- -->
+
 
 ```r
 # Forecast ARIMA model
@@ -44,11 +39,10 @@ title(main = "Total Visitor Nights in Australia
       ")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/1-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/1-2.png)<!-- -->
 
 
 Similar to above, the aggregate level shows strong seasonality and forecasted values appear to be on a negative trend. NSW also had the most total visitors. NSW, VIC, and QLD all have seasonality while the rest of the visitor nights by state group do not have a clear seasonal pattern. The second level forecast indicates that the QLDMetro State Zone has more tourism than any other state zone. This is an interesting feature of the series becauase the state zone that is the highest at level two ranks number three in highest total visitor nights for the level 1 aggregated series which is by state zone.
-
 
 ```r
 # Define the hierarchical time series
@@ -62,7 +56,7 @@ plot(fc_visnights_arima, levels = 0)
 title(main = "Total Visitor Nights in Australia")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/2-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/2-1.png)<!-- -->
 
 ```r
 # Plot the coherent forecasts by level
@@ -70,7 +64,7 @@ plot(fc_visnights_arima, levels = 1)
 title(main = "Total Visitor Nights in Australia by State Group")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/2-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/2-2.png)<!-- -->
 
 ```r
 # Plot the coherent forecasts by level
@@ -78,11 +72,10 @@ plot(fc_visnights_arima, levels = 2)
 title(main = "Total Visitor Nights in Australia by State Zone")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/2-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/2-3.png)<!-- -->
 
 
 This forecast is different than the one from above in many ways. MinT was chosen as a parameter in order to minimize the weights. The sample "sam" covariance parameter was chosen because the number of time periods was greater than the number of rows being analyzed in the heirarchical time series structure. Upon inspection of the state zone and state group forecasts, the values appear to be greater for the optimally reconciled forecast than for the ARIMA forecast. Counterintuitively, the aggregate-level series of the total visitor nights stayed in Australia reveals that the optimally reconciled forecast values are greater than those of the bottom-up ARIMA forecast.
-
 
 ```r
 str(visnights)
@@ -120,7 +113,7 @@ legend("bottomright", legend = c("Optimal", "Bottom-Up"), title = "Coherent Fore
     col = c("Blue", "Green"), lty = c(1, 1), bty = "n", cex = 0.5)
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-1.png)<!-- -->
 
 ```r
 # Plot the optimally reconciled forecast level 1
@@ -128,7 +121,7 @@ plot(fc_visnights_arima_opt, levels = 1, color_lab = TRUE)
 title(main = "Optimally Reconciled Forecasts of Total Visitor Nights in Australia by State Group")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-2.png)<!-- -->
 
 ```r
 # Plot the ARIMA forecast level 1
@@ -136,7 +129,7 @@ plot(fc_visnights_arima, levels = 1, color_lab = TRUE)
 title(main = "ARIMA Forecasts of Total Visitor Nights in Australia by State Group")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-3.png)<!-- -->
 
 ```r
 # Plot the optimally reconciled forecast level 2
@@ -144,7 +137,7 @@ plot(fc_visnights_arima_opt, levels = 2, color_lab = TRUE)
 title(main = "Optimally Reconciled Forecasts of Total Visitor Nights in Australia by State Zone")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-4.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-4.png)<!-- -->
 
 ```r
 # Plot the ARIMA forecast level 2
@@ -152,7 +145,7 @@ plot(fc_visnights_arima, levels = 2, color_lab = TRUE)
 title(main = "ARIMA Forecasts of Total Visitor Nights in Australia by State Zone")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-5.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/3-5.png)<!-- -->
 
 
 Using the last two years of the visnights Australian domestic tourism data as a test set, I generate bottom-up, top-down, and optimally reconciled forecasts for this period and compare their accuracy.
@@ -206,7 +199,7 @@ par(new = TRUE, xpd = TRUE)
 plot(fc_visnights_test_arima_bu, col = "Green")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/4-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/4-1.png)<!-- -->
 
 ```r
 title(main = "Total Visitor Nights in Australia")
@@ -214,7 +207,7 @@ legend("bottomright", legend = c("Optimal", "Bottom-Up"), title = "Coherent Fore
     col = c("Blue", "Green"), lty = c(1, 1), bty = "n", cex = 0.5)
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/4-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/4-2.png)<!-- -->
 
 
 The initial time series of the retail dataset appears to have a strong seasonality and an increasing trend. The residuals do not appear to resemble white noise but the forecast appears to follow similar seasonality and trend. The forecasted values might be higher than expected but they seem close.
@@ -240,7 +233,7 @@ retail.ts <- ts(retail[, "A3349873A"], frequency = 12, start = c(1982, 4))
 autoplot(retail.ts) + xlab("Year") + ylab("Turnover") + ggtitle("Retail Turnover in New South Wales")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/5 Forecast-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/5%20Forecast-1.png)<!-- -->
 
 ```r
 # Apply the TBATS function to the retail time series
@@ -248,14 +241,15 @@ retail.ts %>% tbats() %>% forecast() %>% autoplot() + xlab("") + ylab("Year") +
     ggtitle("Forecast of Retail Turnover in New South Wales")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/5 Forecast-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/5%20Forecast-2.png)<!-- -->
 
 ```r
 # Check the residuals of the model
 retail.ts %>% tbats() %>% checkresiduals()
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/5 Forecast-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/5%20Forecast-3.png)<!-- -->
+
 
 ```
 ## 
@@ -271,7 +265,6 @@ retail.ts %>% tbats() %>% checkresiduals()
 The completely automated approach to forecasting the data appears to produce a close predictions. Upon inspection of the residuals we see the error isn't completely white noise and observe several significant spikes in autocorrelation. I think this model could be improved with another differencing.
 
 We appear to have saved 9 degrees of freedom.
-
 
 ```r
 retail.ts %>% tbats()
@@ -380,7 +373,7 @@ These data could be modeled using a dynamic regression, specifically a harmonic 
 gasonline.tbats %>% checkresiduals()
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/8 Check Residuals and Forecast-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/8%20Check%20Residuals%20and%20Forecast-1.png)<!-- -->
 
 ```
 ## 
@@ -397,7 +390,7 @@ gasonline.tbats %>% checkresiduals()
 gasonline.tbats %>% forecast() %>% autoplot()
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/8 Check Residuals and Forecast-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/8%20Check%20Residuals%20and%20Forecast-2.png)<!-- -->
 
 
 Bootstrapping the original data produces simulated values that appear to follow a strikingly similar trend to the original dataset. The bagged model appears to produce a weak forecast that does not follow any seasonal pattern that might be apparent from the original gasoline time series data.
@@ -414,7 +407,7 @@ autoplot(gasoline) + autolayer(bootseries, colour = TRUE) + autolayer(gasoline,
     ggtitle("Bootstrap of US Finished Motor Gasoline Products Supplied")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/9 Bootstrap-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/9%20Bootstrap-1.png)<!-- -->
 
 ```r
 # Bootstrap the values of the gasoline dataset
@@ -436,7 +429,7 @@ autoplot(gasoline) + autolayer(baggedfc, series = "BaggedETS", PI = FALSE) +
     guides(colour = guide_legend(title = "Forecasts")) + ggtitle("Bagged ETS Bootstrap Forecast of US Finished Motor Gasoline Products Supply")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/9 Bootstrap-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/9%20Bootstrap-2.png)<!-- -->
 
 
 Producing a neaural net forecast from the retail time series appears to have values that are higher than I would have expected from an ideal forecast. These values also no not appear to follow the seasonal pattern as well, I would recommend using a different forecasting method for this dataset. The second plot, forecasting the number of women murdered each year, generated the worst plot, it does not appear to follow the cyclical nature of the initial dataset but it does begin an increasing trend which would be expected in this data. The final neural net that was run on the australian tourism data produced the best forecast, matching seasonality and trend well.
@@ -448,7 +441,7 @@ retail.ts %>% nnetar() %>% forecast() %>% autoplot() + xlab("Year") + ylab("Turn
     ggtitle("Neural Net Forecast of Retail Turnover in New South Wales")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/10 Neural Net Forecast-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/10%20Neural%20Net%20Forecast-1.png)<!-- -->
 
 ```r
 # Forecast the wmurders time series using nnetr()
@@ -456,7 +449,7 @@ wmurders %>% nnetar() %>% forecast() %>% autoplot() + xlab("Year") + ylab("Women
     ggtitle("Neural Net Forecast of Number of Women Murdered Each Year")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/10 Neural Net Forecast-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/10%20Neural%20Net%20Forecast-2.png)<!-- -->
 
 ```r
 # Forecast the austourists time series using nnetar()
@@ -464,5 +457,5 @@ austourists %>% nnetar() %>% forecast() %>% autoplot() + xlab("Year") + ylab("Nu
     ggtitle("Neural Net Forecast of Quarterly Number of International Tourists to Australia From 1999 to 2010")
 ```
 
-![](Hierarchical,_Optimally_Reconciled,_TBATS_and_Neural_Net_Forecasting_files/figure-html/10 Neural Net Forecast-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Hierarchical%2C_Optimally_Reconciled%2C_TBATS_and_Neural_Net_Forecasting_files/figure-html/10%20Neural%20Net%20Forecast-3.png)<!-- -->
 
