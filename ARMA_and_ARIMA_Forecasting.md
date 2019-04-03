@@ -1,11 +1,6 @@
----
-title: "ARMA and ARIMA Forecasting"
-author: "Andrew Pierson"
-date: "November 26, 2018"
-output: 
-  html_document:
-    keep_md: true
----
+### ARMA and ARIMA Forecasting
+#### Author: Andrew Pierson
+#### Date: November 26, 2018
 
 
 ```r
@@ -41,7 +36,6 @@ Upon initial inspection of the dataset, the time series appears to have no trend
 
 Investigating the differenced data using the Ljung-Box test revealed a high p-value of 0.5176, suggesting that yearly change in the murders of women is random and uncorrelated with previous years. Differencing appears to make the trend horizonatal with random variation, an indicator of stationary data. The next step to determine if the difference of the data yearly is stationary is to create an ACF plot. After printing this graph there appears to be a significant autocorrelation spike at lag 2. From this I would suggest an AR(2) or MA(2) model with a difference of 1, hence an ARIMA(0,1,2).
 
-
 ```r
 #Print the top 5 observations in the time series data
 head(wmurders)
@@ -70,21 +64,24 @@ summary(wmurders)
 autoplot(wmurders) + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') + ggtitle('Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/1-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/1-1.png)<!-- -->
+
 
 ```r
 #Plot the ACF of the series
 ggAcf(wmurders) + ggtitle('Autocorrelation Function Plot of the Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/1-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/1-2.png)<!-- -->
+
 
 ```r
 #Plot the differenced data
 autoplot(diff(wmurders, lag = 1)) + xlab('Year') + ggtitle('Difference of Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/1-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/1-3.png)<!-- -->
+
 
 ```r
 #Look at the autocorrelation function (ACF) of the differenced data
@@ -104,14 +101,16 @@ Box.test(diff(wmurders), lag = 1, type = "Ljung-Box")
 ggAcf(diff(wmurders, lag = 1)) + ggtitle('Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/1-4.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/1-4.png)<!-- -->
+
 
 ```r
 #Plot the PACF of the differenced series to get the value of p for an AR model
 ggPacf(diff(wmurders)) + ggtitle('Partial Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/1-5.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/1-5.png)<!-- -->
+
 
 ```r
 #
@@ -121,7 +120,6 @@ ggPacf(diff(wmurders)) + ggtitle('Partial Autocorrelation Function Plot of the D
 I do not believe that this model will require a constant. Backshift operator: (1-B)*y_t
 
 Neither ARIMA(0,1,2) nor ARIMA(2,1,0) models have an AIC value closer to zero than the ARIMA(1,2,1) model. I would recommend using the ARIMA(0,1,2) model.
-
 
 ```r
 #Custom select variables for an ARIMA model
@@ -171,7 +169,8 @@ summary(fit_MA2)
 checkresiduals(fit_MA2)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/2-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/2-1.png)<!-- -->
+
 
 ```
 ## 
@@ -231,7 +230,8 @@ summary(fit_RA2)
 checkresiduals(fit_RA2)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/2-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/2-2.png)<!-- -->
+
 
 ```
 ## 
@@ -245,7 +245,6 @@ checkresiduals(fit_RA2)
 
 
 Forecast three times ahead.
-
 
 ```r
 #Use the forecast function and autoplot to create a plot
@@ -274,21 +273,20 @@ fit_RA2 %>% forecast(h = 3)
 
 Plot of the series with forecasts and prediction intervals for the next three periods shown.
 
-
 ```r
 #Use the forecast function and autoplot to create a plot
 fit_MA2 %>% forecast(h = 3) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/4-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/4-1.png)<!-- -->
+
 
 ```r
 #Use the forecast function and autoplot to create a plot
 fit_RA2 %>% forecast(h = 3) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/4-2.png)<!-- -->
-
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/4-2.png)<!-- -->
 
 
 ```r
@@ -339,7 +337,8 @@ summary(fit_auto)
 checkresiduals(fit_auto)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/5-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/5-1.png)<!-- -->
+
 
 ```
 ## 
@@ -356,8 +355,7 @@ checkresiduals(fit_auto)
 fit_auto %>% forecast(h = 3) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/5-2.png)<!-- -->
-
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/5-2.png)<!-- -->
 
 
 ```r
@@ -386,21 +384,24 @@ summary(usgdp)
 autoplot(usgdp) + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') + ggtitle('Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/6-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/6-1.png)<!-- -->
+
 
 ```r
 #Plot the ACF of the series
 ggAcf(usgdp) + ggtitle('Autocorrelation Function Plot of the Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/6-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/6-2.png)<!-- -->
+
 
 ```r
 #Plot the differenced data
 autoplot(diff(usgdp, lag = 1)) + xlab('Year') + ggtitle('Difference of Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/6-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/6-3.png)<!-- -->
+
 
 ```r
 #Look at the autocorrelation function (ACF) of the differenced data
@@ -420,14 +421,16 @@ Box.test(diff(usgdp), lag = 1, type = "Ljung-Box")
 ggAcf(diff(usgdp, lag = 1)) + ggtitle('Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/6-4.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/6-4.png)<!-- -->
+
 
 ```r
 #Plot the PACF of the differenced series to get the value of p for an AR model
 ggPacf(diff(usgdp)) + ggtitle('Partial Autocorrelation Function Plot of the Difference of Number of Women Murdered Each Year')
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/6-5.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/6-5.png)<!-- -->
+
 
 ```r
 #
@@ -435,7 +438,6 @@ ggPacf(diff(usgdp)) + ggtitle('Partial Autocorrelation Function Plot of the Diff
 
 
 Fit a suitable ARIMA model to the transformed data using auto arima.
-
 
 ```r
 #Automatically select an ARIMA model
@@ -485,7 +487,8 @@ summary(fit_auto)
 checkresiduals(fit_auto)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/7-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/7-1.png)<!-- -->
+
 
 ```
 ## 
@@ -502,11 +505,10 @@ checkresiduals(fit_auto)
 fit_auto %>% forecast(h = 20) %>% autoplot() + ylab('Women Murdered (per 100,000 standard population)') + xlab('Year') 
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/7-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/7-2.png)<!-- -->
 
 
 We will try a few other models including: ARIMA(0,1,2), ARIMA(2,2,1), and ARIMA(1,2,2). The ARIMA(2,2,1) appears to run with the lowest AIC which is around 2408.
-
 
 ```r
 #Custom select variables for an ARIMA model
@@ -556,7 +558,8 @@ summary(fit1)
 checkresiduals(fit1)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/8-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/8-1.png)<!-- -->
+
 
 ```
 ## 
@@ -616,7 +619,8 @@ summary(fit2)
 checkresiduals(fit2)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/8-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/8-2.png)<!-- -->
+
 
 ```
 ## 
@@ -676,7 +680,8 @@ summary(fit3)
 checkresiduals(fit3)
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/8-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/8-3.png)<!-- -->
+
 
 ```
 ## 
@@ -690,7 +695,6 @@ checkresiduals(fit3)
 
 
 Compare the results with what you would obtain using ets with no transformation. The point forecasts, values that are mean forecasts appear to be very similar to the ARIMA(0,1,2) model. I believe that the ets model would also produce an accurate forecast.
-
 
 ```r
 #Find the variables of the ets automatically chosen model
@@ -720,13 +724,12 @@ ets(usgdp)
 
 This time series has a clear positive trend from beginning to end. In addition, the time series plot also appears to have clear seasonality throughout.
 
-
 ```r
 #Create a time series plot of the data
 autoplot(austourists) + xlab("Year") + ylab("Number of International Tourists") + ggtitle("Quarterly Number of International Tourists to Australia From 1999 to 2010")
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/10-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/10-1.png)<!-- -->
 
 
 From the autocorrelation function (ACF) graph we can learn that the largest significant spikes occur every 4 lags while all lags are slowly declining. Therefore we would want to seasonally difference the plot at the fourth lag and then add another difference.
@@ -737,9 +740,7 @@ From the autocorrelation function (ACF) graph we can learn that the largest sign
 ggAcf(austourists) + ggtitle("ACF Plot of Quarterly Number of International Tourists to Australia From 1999 to 2010")
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/11-1.png)<!-- -->
-
-
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/11-1.png)<!-- -->
 
 
 ```r
@@ -747,11 +748,10 @@ ggAcf(austourists) + ggtitle("ACF Plot of Quarterly Number of International Tour
 ggPacf(austourists) + ggtitle("PACF Plot of Quarterly Number of International Tourists to Australia From 1999 to 2010")
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/12-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/12-1.png)<!-- -->
 
 
 This plot shows the data differenced at lag 4 and lag 1, this suggests that a moving average model of 1 be used in order to forecast. In addition, a log of the data was taken to account for the increasing variance of the seasonality.
-
 
 ```r
 #Difference the data in order to reduce trend
@@ -760,11 +760,10 @@ austouristsdiff <- austourists %>% diff() %>% diff() %>% diff() %>% diff()
 autoplot(austouristsdiff) + ggtitle("Fourth-Order Difference of Quarterly Number of International Tourists to Australia From 1999 to 2010 ")
 ```
 
-![](ARMA_and_ARIMA_Forecasting_files/figure-html/13-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/ARMA_and_ARIMA_Forecasting_files/figure-html/13-1.png)<!-- -->
 
 
 The auto arima gave me a very similar model, but it was different by a single aspect. While the auto arima produced ARIMA(1.0.1)(1,0,0)[4], the Fourth-Order Difference that I selected would be modeled as ARIMA(0,0,1)(1,0,0)[4].
-
 
 ```r
 #Plot the fourth order differenced data
