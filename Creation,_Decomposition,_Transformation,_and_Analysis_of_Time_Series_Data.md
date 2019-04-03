@@ -1,18 +1,10 @@
----
-title: "Creation, Decomposition, Transformation, and Analysis of Time Series Data"
-author: "Andrew Pierson"
-date: "10/28/2018"
-output: 
-  html_document:
-    keep_md: true
----
-
-
+### Creation, Decomposition, Transformation, and Analysis of Time Series Data
+#### Author: Andrew Pierson
+#### Date: 10/28/2018
 
 #### Crude Oil Prices
 
 Read in Libraries and Data
-
 
 ```r
 #Check to see where the current working directory is
@@ -61,7 +53,6 @@ summary(crudeoil)
 
 The Crude Oil Prices From 2004 To 2016 time series plot indicates a positive trend overall, however there are sevveral outliers towards the middle of the time period and a sudden decrease in price at the end of 2014. There is a possibility that seasonality might be a contributing factor as well but it is difficult to tell when looking at the entire window. To improve this I shrunk the window to a period that excludes the major outliers. 
 
-
 ```r
 #Read in the csv and define the data frame
 crudeoil <- read.csv("crudeoil_w0416.csv")
@@ -99,11 +90,10 @@ crudeoil %>%
   ggplot(aes(x = date, y = price, group = 1)) + ggtitle("Crude Oil Prices From 2004 To 2016") + geom_line() + scale_x_date(labels = function(x) format(x, "%d-%b-%y"))
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Plotting Time Series Data-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Plotting%20Time%20Series%20Data-1.png)<!-- -->
 
 
 The percent change of oil prices over time indicate that the two areas that were percieved as outliers are also the time periods that have the greatest variation from normal price fluctuation. This is interesting and I think it would be beneficial to know where this data came from in order to search for clues as to what is causing drasttic percent changes in crude oil prices. Perhaps this could be from a government deal negotiation or war efforts in foreign countries. 
-
 
 ```r
 #Read in the csv and define the data frame
@@ -137,19 +127,19 @@ PriceDiff %>%
   autoplot.zoo() + ggtitle("Rate of Crude Oil Price Change") + xlab("Date") + ylab("Rate of Price Change") + scale_x_date(labels = function(x) format(x, "%d-%b-%y"))
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Percentage Change Rate of Spot Prices-1.png)<!-- -->
+
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Percentage%20Change%20Rate%20of%20Spot%20Prices-1.png)<!-- -->
 
 
 The Rate of Crude Oil Price Change histogram and normal Q-Q plots both indicate a slightly abnormal distribution. The distribution is weighted more negatively with a short decreasing tail on the negative side. Alternatively, the positive side of the distribution has a tail that decreases and then has an upward curve at the end. 
-
 
 ```r
 #Plot a histogram with a title and axis labels
 hist(PriceDiff, xlab = "Rate of Price Change", ylab = "Date", main = "Rate of Crude Oil Price Change Histogram")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Percentage Change Rate of Spot Prices Histogram-1.png)<!-- -->
 
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Percentage%20Change%20Rate%20of%20Spot%20Prices%20Histogram-1.png)<!-- -->
 
 
 ```r
@@ -159,11 +149,10 @@ qqnorm(PriceDiff, main = "Percentage Change Rate of Crude Oil Price Change Norma
 qqline(PriceDiff, col = 2)
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Percentage Change Rate of Spot Prices Normal Q-Q Plot-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Percentage%20Change%20Rate%20of%20Spot%20Prices%20Normal%20Q-Q%20Plot-1.png)<!-- -->
 
 
 The Log Plot of Crude Oil Spot Prices is similar, if not identical, to the Rate of Change time series plot. This is very interesting as the manual function that was created for the rate of change is the same as the difference in log function. This would be an easy way to plot the rate of change without needing to define more variables. 
-
 
 ```r
 #Read in the csv and define the data frame
@@ -189,8 +178,7 @@ LogDiff %>%
   autoplot.zoo() + ggtitle("Log of Crude Oil Price Change") + xlab("Date") + ylab("Log of Price Change") + scale_x_date(labels = function(x) format(x, "%d-%b-%y"))
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Log of Crude Oil Spot Prices-1.png)<!-- -->
-
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Log%20of%20Crude%20Oil%20Spot%20Prices-1.png)<!-- -->
 
 
 #### Retail Data
@@ -260,7 +248,7 @@ myts %>%
   autoplot.zoo()  + ggtitle("Retail Autoplot")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Explore Plots-1.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Explore%20Plots-1.png)<!-- -->
 
 ```r
 #Load the forecast library
@@ -269,31 +257,31 @@ library(forecast)
 ggseasonplot(myts)  + ggtitle("Retail Seasonal Plot")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Explore Plots-2.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Explore%20Plots-2.png)<!-- -->
 
 ```r
 ggseasonplot(myts, polar = TRUE)  + ggtitle("Retail Seasonal Plot")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Explore Plots-3.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Explore%20Plots-3.png)<!-- -->
 
 ```r
 #Subseries plot
 ggsubseriesplot(myts)  + ggtitle("Retail Seasonal Subseries Plot")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Explore Plots-4.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Explore%20Plots-4.png)<!-- -->
 
 ```r
 #Lag plot
 gglagplot(myts)  + ggtitle("Retail Lag Plot")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Explore Plots-5.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Explore%20Plots-5.png)<!-- -->
 
 ```r
 #Acf plot
 ggAcf(myts)  + ggtitle("Retail Correlogram")
 ```
 
-![](Creation,_Decomposition,_Transformation,_and_Analysis_of_Time_Series_Data_files/figure-html/Explore Plots-6.png)<!-- -->
+![](https://github.com/apierson3/Time-Series-and-Forecasting/blob/master/Creation%2C_Decomposition%2C_Transformation%2C_and_Analysis_of_Time_Series_Data_files/figure-html/Explore%20Plots-6.png)<!-- -->
